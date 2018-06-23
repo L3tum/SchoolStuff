@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -26,7 +27,8 @@ namespace Zahlensystemrechner
         /// </summary>
         private static readonly Regex Line = new Regex("(\\+|-)?[a-fhxko0-9]+(\\+|-){1}(\\+|-)?[a-fhxko0-9]+");
 
-        private static readonly List<Tuple<string, string>> Calculations = new List<Tuple<string, string>>();
+        private static readonly List<Tuple<string, string, string>> Calculations =
+            new List<Tuple<string, string, string>>();
 
         private static bool Prefix;
 
@@ -35,15 +37,11 @@ namespace Zahlensystemrechner
             var calcing = true;
             while (calcing)
             {
-                var input = GetNextCalculation();
+                var input = GetNextInput();
 
                 if (input == "list")
                 {
-                    foreach (Tuple<string, string> calculation in Calculations)
-                    {
-                        Console.WriteLine("Rechnung: " + calculation.Item1);
-                        PrintResult(calculation.Item2);
-                    }
+                    PrintList();
                 }
                 else if (input == "exit")
                 {
@@ -65,30 +63,68 @@ namespace Zahlensystemrechner
                 }
                 else
                 {
-                    var result = Calculate(input);
+                    try
+                    {
+                        var sw = Stopwatch.StartNew();
+                        var result = Calculate(input);
+                        sw.Stop();
+                        var time = (sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond / 1000f) / 1000f / 1000f).ToString("F99").TrimEnd('0');
 
-                    PrintResult(result);
+                        PrintResult(input, result, time + " Sekunden");
 
-                    Calculations.Add(new Tuple<string, string>(input, result));
+                        Calculations.Add(new Tuple<string, string, string>(input, result, time + " Sekunden"));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
         }
 
-        private static void PrintResult(string result)
+        private static void PrintList()
         {
             Console.WriteLine();
 
-            IEnumerable<Tuple<string, string, string, string>> results = new[]
+            List<Tuple<string, string, string, string, string, string>> calcs =
+                new List<Tuple<string, string, string, string, string, string>>();
+
+            foreach (Tuple<string, string, string> calculation in Calculations)
             {
-                Tuple.Create(result, 
+                calcs.Add(Tuple.Create(calculation.Item1,
+                    calculation.Item2,
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Dual),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Oktal),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Hexadezimal),
+                    calculation.Item3));
+            }
+
+            Console.WriteLine(calcs.ToStringTable(
+                new[] {"Rechnung", "Dezimal", "Binär", "Oktal", "Hexadezimal", "Zeit"},
+                tuple => tuple.Item1,
+                tuple => tuple.Item2, tuple => tuple.Item3, tuple => tuple.Item4, tuple => tuple.Item5,
+                tuple => tuple.Item6));
+        }
+
+        private static void PrintResult(string input, string result, string time)
+        {
+            Console.WriteLine();
+
+            IEnumerable<Tuple<string, string, string, string, string, string>> results = new[]
+            {
+                Tuple.Create(input,
+                    result,
                     ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Dual),
                     ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Oktal),
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Hexadezimal))
+                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Hexadezimal),
+                    time)
             };
 
-            Console.WriteLine(results.ToStringTable(new[] {"Dezimal", "Binär", "Oktal", "Hexadezimal"},
+            Console.WriteLine(results.ToStringTable(
+                new[] {"Rechnung", "Dezimal", "Binär", "Oktal", "Hexadezimal", "Zeit"},
                 tuple => tuple.Item1,
-                tuple => tuple.Item2, tuple => tuple.Item3, tuple => tuple.Item4));
+                tuple => tuple.Item2, tuple => tuple.Item3, tuple => tuple.Item4, tuple => tuple.Item5,
+                tuple => tuple.Item6));
 
             //Console.WriteLine("Das Ergebnis deiner Rechnung beträgt: ");
             //Console.WriteLine("Dezimal\t\tBinär\t\tOktal\t\tHexadezimal");
@@ -99,10 +135,10 @@ namespace Zahlensystemrechner
             Console.WriteLine();
         }
 
-        private static string GetNextCalculation()
+        private static string GetNextInput()
         {
             Console.Write("Bitte gib deine Rechnung ein: ");
-            return Console.ReadLine()?.ToLower();
+            return Console.ReadLine()?.ToLower().Replace(" ", "");
         }
 
         /// <summary>
@@ -314,8 +350,7 @@ namespace Zahlensystemrechner
 
                 case Zahlensysteme.Invalid:
                 {
-                    Console.WriteLine("Could not determine Zahlensystem!");
-                    break;
+                    throw new ArgumentException("Could not determine Zahlensystem!");
                 }
             }
 
