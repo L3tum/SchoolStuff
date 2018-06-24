@@ -93,9 +93,9 @@ namespace Zahlensystemrechner
             {
                 calcs.Add(Tuple.Create(calculation.Item1,
                     calculation.Item2,
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.DUAL),
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.OKTAL),
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.HEXADEZIMAL),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), ZahlensystemeEnum.DUAL),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), ZahlensystemeEnum.OKTAL),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), ZahlensystemeEnum.HEXADEZIMAL),
                     calculation.Item3));
             }
 
@@ -114,9 +114,9 @@ namespace Zahlensystemrechner
             {
                 Tuple.Create(input,
                     result,
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.DUAL),
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.OKTAL),
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.HEXADEZIMAL),
+                    ConvertToZahlensystem(int.Parse(result), ZahlensystemeEnum.DUAL),
+                    ConvertToZahlensystem(int.Parse(result), ZahlensystemeEnum.OKTAL),
+                    ConvertToZahlensystem(int.Parse(result), ZahlensystemeEnum.HEXADEZIMAL),
                     time)
             };
 
@@ -170,14 +170,14 @@ namespace Zahlensystemrechner
                 foreach (Match point in points)
                 {
                     var value = point.Groups[0].Value;
-                    var operation = value.Contains("*") ? Operations.MULTIPLY : Operations.DIVIDE;
-                    var parts = operation == Operations.MULTIPLY ? value.Split('*') : value.Split(':', '\\', '/');
+                    var operation = value.Contains("*") ? OperationsEnum.MULTIPLY : OperationsEnum.DIVIDE;
+                    var parts = operation == OperationsEnum.MULTIPLY ? value.Split('*') : value.Split(':', '\\', '/');
 
                     var operandOne = parts[0];
                     var operandTwo = parts[1];
                     var numberOne = PrepareOperand(operandOne);
                     var numberTwo = PrepareOperand(operandTwo);
-                    var result = operation == Operations.MULTIPLY ? numberOne * numberTwo : numberOne / numberTwo;
+                    var result = operation == OperationsEnum.MULTIPLY ? numberOne * numberTwo : numberOne / numberTwo;
 
                     input = input.Replace(value, result.ToString());
                 }
@@ -192,8 +192,8 @@ namespace Zahlensystemrechner
                 foreach (Match point in lines)
                 {
                     var value = point.Groups[0].Value;
-                    var operation = value.Contains("+") ? Operations.PLUS : Operations.MINUS;
-                    var parts = operation == Operations.PLUS ? value.Split('+') : value.Split('-');
+                    var operation = value.Contains("+") ? OperationsEnum.PLUS : OperationsEnum.MINUS;
+                    var parts = operation == OperationsEnum.PLUS ? value.Split('+') : value.Split('-');
 
                     // The split will remove the +/- of the operands as well, we need to fix that
                     if (parts.Length > 2)
@@ -201,17 +201,17 @@ namespace Zahlensystemrechner
                         // We can have a maximum number of 4 parts (realistically) if all operators were -
                         if (string.IsNullOrEmpty(parts[0]))
                         {
-                            parts[0] = (operation == Operations.PLUS ? "+" : "-") + parts[1];
+                            parts[0] = (operation == OperationsEnum.PLUS ? "+" : "-") + parts[1];
 
                             // We need to check offset by one since the first "operand" took two "spots" in the array
                             if (string.IsNullOrEmpty(parts[2]))
                             {
-                                parts[1] = (operation == Operations.PLUS ? "+" : "-") + parts[3];
+                                parts[1] = (operation == OperationsEnum.PLUS ? "+" : "-") + parts[3];
                             }
                         }
                         else if (string.IsNullOrEmpty(parts[1]))
                         {
-                            parts[1] = (operation == Operations.PLUS ? "+" : "-") + parts[2];
+                            parts[1] = (operation == OperationsEnum.PLUS ? "+" : "-") + parts[2];
                         }
                     }
 
@@ -220,7 +220,7 @@ namespace Zahlensystemrechner
                     var numberOne = PrepareOperand(operandOne);
                     var numberTwo = PrepareOperand(operandTwo);
 
-                    var result = operation == Operations.PLUS ? numberOne + numberTwo : numberOne - numberTwo;
+                    var result = operation == OperationsEnum.PLUS ? numberOne + numberTwo : numberOne - numberTwo;
 
                     input = input.Replace(value, result.ToString());
                 }
@@ -267,12 +267,12 @@ namespace Zahlensystemrechner
 
             switch (zahlensystem)
             {
-                case Zahlensysteme.DEZIMAL:
+                case ZahlensystemeEnum.DEZIMAL:
                 {
                     return int.Parse(input);
                 }
 
-                case Zahlensysteme.DUAL:
+                case ZahlensystemeEnum.DUAL:
                 {
                     input = input.Replace(prefixEnabled ? "0d" : "d", "");
 
@@ -287,7 +287,7 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.OKTAL:
+                case ZahlensystemeEnum.OKTAL:
                 {
                     input = input.Replace(prefixEnabled ? "0k" : "o", "");
 
@@ -302,7 +302,7 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.HEXADEZIMAL:
+                case ZahlensystemeEnum.HEXADEZIMAL:
                 {
                     input = input.Replace(prefixEnabled ? "0x" : "h", "");
 
@@ -348,7 +348,7 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.INVALID:
+                case ZahlensystemeEnum.INVALID:
                 {
                     throw new ArgumentException("Could not determine Zahlensystem!");
                 }
@@ -363,11 +363,11 @@ namespace Zahlensystemrechner
         /// <param name="dezimal">The dezimal.</param>
         /// <param name="zahlensystem">The zahlensystem.</param>
         /// <returns></returns>
-        private static string ConvertToZahlensystem(int dezimal, Zahlensysteme zahlensystem)
+        private static string ConvertToZahlensystem(int dezimal, ZahlensystemeEnum zahlensystem)
         {
             switch (zahlensystem)
             {
-                case Zahlensysteme.DUAL:
+                case ZahlensystemeEnum.DUAL:
                 {
                     var output = "";
 
@@ -380,7 +380,7 @@ namespace Zahlensystemrechner
                     return prefixEnabled ? "0d" + output : output + "d";
                 }
 
-                case Zahlensysteme.OKTAL:
+                case ZahlensystemeEnum.OKTAL:
                 {
                     var output = "";
 
@@ -393,7 +393,7 @@ namespace Zahlensystemrechner
                     return prefixEnabled ? "0k" + output : output + "o";
                 }
 
-                case Zahlensysteme.HEXADEZIMAL:
+                case ZahlensystemeEnum.HEXADEZIMAL:
                 {
                     var output = "";
 
@@ -445,36 +445,36 @@ namespace Zahlensystemrechner
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns></returns>
-        private static Zahlensysteme GetZahlensystem(string input)
+        private static ZahlensystemeEnum GetZahlensystem(string input)
         {
             if (((prefixEnabled && input.StartsWith("0d")) || (!prefixEnabled && input.EndsWith("d"))) &&
                 input.All(c => "01d".Contains(c)))
             {
-                return Zahlensysteme.DUAL;
+                return ZahlensystemeEnum.DUAL;
             }
 
             if (((prefixEnabled && input.StartsWith("0k")) || (!prefixEnabled && input.EndsWith("o"))) &&
                 input.All(c => "01234567ok".Contains(c)))
             {
-                return Zahlensysteme.OKTAL;
+                return ZahlensystemeEnum.OKTAL;
             }
 
             if (((prefixEnabled && input.StartsWith("0x")) || (!prefixEnabled && input.EndsWith("h"))) &&
                 input.All(c => "0123456789abcdefhx".Contains(c)))
             {
-                return Zahlensysteme.HEXADEZIMAL;
+                return ZahlensystemeEnum.HEXADEZIMAL;
             }
 
             if (input.All(c => "0123456789".Contains(c)))
             {
-                return Zahlensysteme.DEZIMAL;
+                return ZahlensystemeEnum.DEZIMAL;
             }
 
-            return Zahlensysteme.INVALID;
+            return ZahlensystemeEnum.INVALID;
         }
     }
 
-    internal enum Zahlensysteme
+    internal enum ZahlensystemeEnum
     {
         DUAL,
         OKTAL,
@@ -483,7 +483,7 @@ namespace Zahlensystemrechner
         INVALID
     }
 
-    internal enum Operations
+    internal enum OperationsEnum
     {
         PLUS,
         MINUS,
