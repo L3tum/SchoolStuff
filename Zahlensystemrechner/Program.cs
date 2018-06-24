@@ -15,22 +15,22 @@ namespace Zahlensystemrechner
         /// <summary>
         /// Matches anything that is inside braces except other braces
         /// </summary>
-        private static readonly Regex Braces = new Regex("\\(([^()]+)\\)");
+        private static readonly Regex BRACES_PATTERN = new Regex("\\(([^()]+)\\)");
 
         /// <summary>
         /// Matches + or -, followed by any character between a-f and 0-9 or h, x, k and o, then matches exactly one operator (*,\,/,:) and then matches any character as previously again
         /// </summary>
-        private static readonly Regex Points = new Regex("(\\+|-)?[a-fhyko0-9]+(\\*|\\|\\/|:){1}(\\+|-)?[a-fhyko0-9]+");
+        private static readonly Regex POINTS_EXPRESSION_PATTERN = new Regex("(\\+|-)?[a-fhyko0-9]+(\\*|\\|\\/|:){1}(\\+|-)?[a-fhyko0-9]+");
 
         /// <summary>
         /// As above, it matches + or -, followed by any character as above, then matches exactly one operator (+,-) and then matches any character as previously again
         /// </summary>
-        private static readonly Regex Line = new Regex("(\\+|-)?[a-fhxko0-9]+(\\+|-){1}(\\+|-)?[a-fhxko0-9]+");
+        private static readonly Regex LINE_EXPRESSION_PATTERN = new Regex("(\\+|-)?[a-fhxko0-9]+(\\+|-){1}(\\+|-)?[a-fhxko0-9]+");
 
         private static readonly List<Tuple<string, string, string>> Calculations =
             new List<Tuple<string, string, string>>();
 
-        private static bool Prefix;
+        private static bool prefixEnabled;
 
         private static void Main(string[] args)
         {
@@ -53,12 +53,12 @@ namespace Zahlensystemrechner
                 }
                 else if (input == "prefix")
                 {
-                    Prefix = true;
+                    prefixEnabled = true;
                     Console.WriteLine("Switched to Prefix!");
                 }
                 else if (input == "suffix")
                 {
-                    Prefix = false;
+                    prefixEnabled = false;
                     Console.WriteLine("Switched to Suffix!");
                 }
                 else
@@ -93,9 +93,9 @@ namespace Zahlensystemrechner
             {
                 calcs.Add(Tuple.Create(calculation.Item1,
                     calculation.Item2,
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Dual),
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Oktal),
-                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.Hexadezimal),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.DUAL),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.OKTAL),
+                    ConvertToZahlensystem(int.Parse(calculation.Item2), Zahlensysteme.HEXADEZIMAL),
                     calculation.Item3));
             }
 
@@ -114,9 +114,9 @@ namespace Zahlensystemrechner
             {
                 Tuple.Create(input,
                     result,
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Dual),
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Oktal),
-                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.Hexadezimal),
+                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.DUAL),
+                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.OKTAL),
+                    ConvertToZahlensystem(int.Parse(result), Zahlensysteme.HEXADEZIMAL),
                     time)
             };
 
@@ -148,7 +148,7 @@ namespace Zahlensystemrechner
         /// <returns></returns>
         private static string Calculate(string input)
         {
-            var braces = Braces.Matches(input);
+            var braces = BRACES_PATTERN.Matches(input);
 
             while (braces.Count > 0)
             {
@@ -160,40 +160,40 @@ namespace Zahlensystemrechner
                     input = input.Replace(brace.Groups[0].Value, result);
                 }
 
-                braces = Braces.Matches(input);
+                braces = BRACES_PATTERN.Matches(input);
             }
 
-            var points = Points.Matches(input);
+            var points = POINTS_EXPRESSION_PATTERN.Matches(input);
 
             while (points.Count > 0)
             {
                 foreach (Match point in points)
                 {
                     var value = point.Groups[0].Value;
-                    var operation = value.Contains("*") ? Operations.Multiply : Operations.Divide;
-                    var parts = operation == Operations.Multiply ? value.Split('*') : value.Split(':', '\\', '/');
+                    var operation = value.Contains("*") ? Operations.MULTIPLY : Operations.DIVIDE;
+                    var parts = operation == Operations.MULTIPLY ? value.Split('*') : value.Split(':', '\\', '/');
 
                     var operandOne = parts[0];
                     var operandTwo = parts[1];
                     var numberOne = PrepareOperand(operandOne);
                     var numberTwo = PrepareOperand(operandTwo);
-                    var result = operation == Operations.Multiply ? numberOne * numberTwo : numberOne / numberTwo;
+                    var result = operation == Operations.MULTIPLY ? numberOne * numberTwo : numberOne / numberTwo;
 
                     input = input.Replace(value, result.ToString());
                 }
 
-                points = Points.Matches(input);
+                points = POINTS_EXPRESSION_PATTERN.Matches(input);
             }
 
-            var lines = Line.Matches(input);
+            var lines = LINE_EXPRESSION_PATTERN.Matches(input);
 
             while (lines.Count > 0)
             {
                 foreach (Match point in lines)
                 {
                     var value = point.Groups[0].Value;
-                    var operation = value.Contains("+") ? Operations.Plus : Operations.Minus;
-                    var parts = operation == Operations.Plus ? value.Split('+') : value.Split('-');
+                    var operation = value.Contains("+") ? Operations.PLUS : Operations.MINUS;
+                    var parts = operation == Operations.PLUS ? value.Split('+') : value.Split('-');
 
                     // The split will remove the +/- of the operands as well, we need to fix that
                     if (parts.Length > 2)
@@ -201,17 +201,17 @@ namespace Zahlensystemrechner
                         // We can have a maximum number of 4 parts (realistically) if all operators were -
                         if (string.IsNullOrEmpty(parts[0]))
                         {
-                            parts[0] = (operation == Operations.Plus ? "+" : "-") + parts[1];
+                            parts[0] = (operation == Operations.PLUS ? "+" : "-") + parts[1];
 
                             // We need to check offset by one since the first "operand" took two "spots" in the array
                             if (string.IsNullOrEmpty(parts[2]))
                             {
-                                parts[1] = (operation == Operations.Plus ? "+" : "-") + parts[3];
+                                parts[1] = (operation == Operations.PLUS ? "+" : "-") + parts[3];
                             }
                         }
                         else if (string.IsNullOrEmpty(parts[1]))
                         {
-                            parts[1] = (operation == Operations.Plus ? "+" : "-") + parts[2];
+                            parts[1] = (operation == Operations.PLUS ? "+" : "-") + parts[2];
                         }
                     }
 
@@ -220,12 +220,12 @@ namespace Zahlensystemrechner
                     var numberOne = PrepareOperand(operandOne);
                     var numberTwo = PrepareOperand(operandTwo);
 
-                    var result = operation == Operations.Plus ? numberOne + numberTwo : numberOne - numberTwo;
+                    var result = operation == Operations.PLUS ? numberOne + numberTwo : numberOne - numberTwo;
 
                     input = input.Replace(value, result.ToString());
                 }
 
-                lines = Line.Matches(input);
+                lines = LINE_EXPRESSION_PATTERN.Matches(input);
             }
 
             return input;
@@ -267,14 +267,14 @@ namespace Zahlensystemrechner
 
             switch (zahlensystem)
             {
-                case Zahlensysteme.Dezimal:
+                case Zahlensysteme.DEZIMAL:
                 {
                     return int.Parse(input);
                 }
 
-                case Zahlensysteme.Dual:
+                case Zahlensysteme.DUAL:
                 {
-                    input = input.Replace(Prefix ? "0d" : "d", "");
+                    input = input.Replace(prefixEnabled ? "0d" : "d", "");
 
                     var output = 0;
 
@@ -287,9 +287,9 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.Oktal:
+                case Zahlensysteme.OKTAL:
                 {
-                    input = input.Replace(Prefix ? "0k" : "o", "");
+                    input = input.Replace(prefixEnabled ? "0k" : "o", "");
 
                     var output = 0;
 
@@ -302,9 +302,9 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.Hexadezimal:
+                case Zahlensysteme.HEXADEZIMAL:
                 {
-                    input = input.Replace(Prefix ? "0x" : "h", "");
+                    input = input.Replace(prefixEnabled ? "0x" : "h", "");
 
                     var output = 0;
 
@@ -348,7 +348,7 @@ namespace Zahlensystemrechner
                     return output;
                 }
 
-                case Zahlensysteme.Invalid:
+                case Zahlensysteme.INVALID:
                 {
                     throw new ArgumentException("Could not determine Zahlensystem!");
                 }
@@ -367,7 +367,7 @@ namespace Zahlensystemrechner
         {
             switch (zahlensystem)
             {
-                case Zahlensysteme.Dual:
+                case Zahlensysteme.DUAL:
                 {
                     var output = "";
 
@@ -377,10 +377,10 @@ namespace Zahlensystemrechner
                         dezimal /= 2;
                     }
 
-                    return Prefix ? "0d" + output : output + "d";
+                    return prefixEnabled ? "0d" + output : output + "d";
                 }
 
-                case Zahlensysteme.Oktal:
+                case Zahlensysteme.OKTAL:
                 {
                     var output = "";
 
@@ -390,10 +390,10 @@ namespace Zahlensystemrechner
                         dezimal /= 8;
                     }
 
-                    return Prefix ? "0k" + output : output + "o";
+                    return prefixEnabled ? "0k" + output : output + "o";
                 }
 
-                case Zahlensysteme.Hexadezimal:
+                case Zahlensysteme.HEXADEZIMAL:
                 {
                     var output = "";
 
@@ -433,7 +433,7 @@ namespace Zahlensystemrechner
                         dezimal /= 16;
                     }
 
-                    return Prefix ? "0x" + output : output + "h";
+                    return prefixEnabled ? "0x" + output : output + "h";
                 }
             }
 
@@ -447,47 +447,47 @@ namespace Zahlensystemrechner
         /// <returns></returns>
         private static Zahlensysteme GetZahlensystem(string input)
         {
-            if (((Prefix && input.StartsWith("0d")) || (!Prefix && input.EndsWith("d"))) &&
+            if (((prefixEnabled && input.StartsWith("0d")) || (!prefixEnabled && input.EndsWith("d"))) &&
                 input.All(c => "01d".Contains(c)))
             {
-                return Zahlensysteme.Dual;
+                return Zahlensysteme.DUAL;
             }
 
-            if (((Prefix && input.StartsWith("0k")) || (!Prefix && input.EndsWith("o"))) &&
+            if (((prefixEnabled && input.StartsWith("0k")) || (!prefixEnabled && input.EndsWith("o"))) &&
                 input.All(c => "01234567ok".Contains(c)))
             {
-                return Zahlensysteme.Oktal;
+                return Zahlensysteme.OKTAL;
             }
 
-            if (((Prefix && input.StartsWith("0x")) || (!Prefix && input.EndsWith("h"))) &&
+            if (((prefixEnabled && input.StartsWith("0x")) || (!prefixEnabled && input.EndsWith("h"))) &&
                 input.All(c => "0123456789abcdefhx".Contains(c)))
             {
-                return Zahlensysteme.Hexadezimal;
+                return Zahlensysteme.HEXADEZIMAL;
             }
 
             if (input.All(c => "0123456789".Contains(c)))
             {
-                return Zahlensysteme.Dezimal;
+                return Zahlensysteme.DEZIMAL;
             }
 
-            return Zahlensysteme.Invalid;
+            return Zahlensysteme.INVALID;
         }
     }
 
     internal enum Zahlensysteme
     {
-        Dual,
-        Oktal,
-        Dezimal,
-        Hexadezimal,
-        Invalid
+        DUAL,
+        OKTAL,
+        DEZIMAL,
+        HEXADEZIMAL,
+        INVALID
     }
 
     internal enum Operations
     {
-        Plus,
-        Minus,
-        Multiply,
-        Divide
+        PLUS,
+        MINUS,
+        MULTIPLY,
+        DIVIDE
     }
 }
