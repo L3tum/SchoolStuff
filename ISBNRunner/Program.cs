@@ -44,7 +44,7 @@ namespace ISBNRunner
 						Console.WriteLine();
 						break;
 					}
-					case "clearHistory":
+					case "clearhistory":
 					{
 						history.Clear();
 						break;
@@ -73,7 +73,7 @@ namespace ISBNRunner
 
 						var doc = task.Result;
 
-						if (doc.isbn.Count == 0)
+						if (string.IsNullOrWhiteSpace(doc.title_suggest))
 						{
 							PrintNotFound(info);
 							Console.WriteLine();
@@ -81,34 +81,80 @@ namespace ISBNRunner
 							break;
 						}
 
-						var isbn10 = doc.isbn[0];
-						var isbn13 = "";
-						var version = isbn.GetISBNVersion(isbn10);
+						var isbn10 = "None";
+						var isbn13 = "None";
+						if (doc.isbn != null && doc.isbn.Count > 0)
+						{
+							isbn10 = doc.isbn[0];
+							var version = isbn.GetISBNVersion(isbn10);
 
-						if (version == VERSION.ISBN10)
-						{
-							isbn13 = isbn.ConvertISBN(isbn10).ToUpper();
-							isbn10 = isbn.HyphenateISBN(isbn10);
-						}
-						else
-						{
-							isbn13 = isbn10;
-							isbn10 = isbn.ConvertISBN(isbn13).ToUpper();
-							isbn13 = isbn.HyphenateISBN(isbn13);
+							if (version == VERSION.ISBN10)
+							{
+								isbn13 = isbn.ConvertISBN(isbn10).ToUpper();
+								isbn10 = isbn.HyphenateISBN(isbn10);
+							}
+							else
+							{
+								isbn13 = isbn10;
+								isbn10 = isbn.ConvertISBN(isbn13).ToUpper();
+								isbn13 = isbn.HyphenateISBN(isbn13);
+							}
 						}
 
 						Console.WriteLine();
 						Console.WriteLine($"Das Buch \"{doc.title}\" hat folgende Eigenschaften: ");
-						Console.Write("ISBN10: ");
-						PrintISBN10(isbn10);
+						PrintKey("ISBN10: ");
+						if (isbn10 == "None")
+						{
+							Console.Write("Keine vergeben");
+						}
+						else
+						{
+							PrintISBN10(isbn10);
+						}
+
 						Console.WriteLine(",");
-						Console.Write("ISBN13: ");
-						PrintISBN13(isbn13);
+						PrintKey("ISBN13: ");
+						if (isbn13 == "None")
+						{
+							Console.Write("Keine vergeben");
+						}
+						else
+						{
+							PrintISBN13(isbn13);
+						}
+
 						Console.WriteLine(",");
-						Console.WriteLine($"Author: \"{string.Join(", ", doc.author_name)}\",");
-						Console.WriteLine($"Publisher: \"{string.Join(", ", doc.publisher)}\",");
+						if (doc.person != null && doc.person.Count > 0)
+						{
+							PrintKey("Originalauthor: ");
+							Console.WriteLine($"\"{string.Join("; ", doc.person)}\",");
+						}
+
+						PrintKey("Author: ");
+						Console.WriteLine($"\"{string.Join("; ", doc.author_name)}\",");
+						if (doc.place != null && doc.place.Count > 0)
+						{
+							PrintKey("Geschrieben in: ");
+							Console.WriteLine($"\"{string.Join("; ", doc.place)}\",");
+						}
+
+						if (doc.contributor != null && doc.contributor.Count > 0)
+						{
+							PrintKey("Mitwirkende: ");
+							Console.WriteLine($"\"{string.Join("; ", doc.contributor)}\",");
+						}
+
+						PrintKey("Publisher: ");
+						Console.WriteLine($"\"{string.Join("; ", doc.publisher)}\",");
+						if (doc.publish_place != null && doc.publish_place.Count > 0)
+						{
+							PrintKey("Publiziert in: ");
+							Console.WriteLine($"\"{string.Join("; ", doc.publish_place)}\",");
+						}
+
 						Console.WriteLine(
-							$"Es wurde zuerst in {doc.first_publish_year} und zuletzt in {doc.publish_year.Last()} veröffentlicht.");
+							$"Zuerst im Jahre {doc.first_publish_year} und zuletzt im Jahre {doc.publish_year.Last()} veröffentlicht.");
 						Console.WriteLine();
 
 						history.Add(new Tuple<string, string, string>(isbn10, isbn13, elapsedSeconds));
@@ -240,6 +286,14 @@ namespace ISBNRunner
 				input = Console.ReadLine();
 				Console.WriteLine();
 			}
+		}
+
+		private static void PrintKey(string key)
+		{
+			var normalColor = Console.ForegroundColor;
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.Write(key);
+			Console.ForegroundColor = normalColor;
 		}
 
 		private static void PrintNotFound(string info)

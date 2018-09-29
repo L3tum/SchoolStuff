@@ -36,6 +36,8 @@ namespace ISBNUtility.Model
 		public List<string> lccn { get; set; }
 		public List<string> id_librarything { get; set; }
 		public List<string> place { get; set; }
+		public List<string> person { get; set; }
+		public List<string> contributor { get; set; }
 	}
 
 	public class OpenLibrary

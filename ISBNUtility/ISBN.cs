@@ -1,7 +1,6 @@
 ﻿#region usings
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -71,7 +70,8 @@ namespace ISBNUtility
 
 			if (checksum != sanitized[sanitized.Length - 1])
 			{
-				throw new FormatException($"Checksum mismatch for {input}! It should be {checksum.ToString().ToUpper()}!");
+				throw new FormatException(
+					$"Checksum mismatch for {input}! It should be {checksum.ToString().ToUpper()}!");
 			}
 
 			var isbn = (version == VERSION.ISBN10
@@ -145,7 +145,7 @@ namespace ISBNUtility
 		/// <returns></returns>
 		public async Task<string[]> GetISBNFromSearch(string search)
 		{
-			string request = "http://openlibrary.org/search.json?q=" + Uri.EscapeUriString(search);
+			string request = "http://openlibrary.org/search.json?title=" + Uri.EscapeUriString(search);
 
 			using (HttpClient client = new HttpClient())
 			{
@@ -157,7 +157,8 @@ namespace ISBNUtility
 						JsonConvert.DeserializeObject<OpenLibrary>(await response.Content.ReadAsStringAsync()
 							.ConfigureAwait(false));
 
-					return data.docs.Select(doc => doc.isbn != null && doc.isbn.Count > 0 ? doc.isbn[0] : "").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+					return data.docs.Select(doc => doc.isbn != null && doc.isbn.Count > 0 ? doc.isbn[0] : "")
+						.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 				}
 			}
 
@@ -171,7 +172,17 @@ namespace ISBNUtility
 		/// <returns></returns>
 		public async Task<string[]> GetAuthorFromSearch(string search)
 		{
-			string request = "http://openlibrary.org/search.json?q=" + Uri.EscapeUriString(search);
+			string request = "";
+			var version = GetISBNVersion(search);
+
+			if (version == VERSION.INVALID)
+			{
+				request = "http://openlibrary.org/search.json?title=" + Uri.EscapeUriString(search);
+			}
+			else
+			{
+				request = "http://openlibrary.org/search.json?isbn=" + Uri.EscapeUriString(search);
+			}
 
 			using (HttpClient client = new HttpClient())
 			{
@@ -201,7 +212,17 @@ namespace ISBNUtility
 		/// <returns></returns>
 		public async Task<string[]> GetPublisherFromSearch(string search)
 		{
-			string request = "http://openlibrary.org/search.json?q=" + Uri.EscapeUriString(search);
+			string request = "";
+			var version = GetISBNVersion(search);
+
+			if (version == VERSION.INVALID)
+			{
+				request = "http://openlibrary.org/search.json?title=" + Uri.EscapeUriString(search);
+			}
+			else
+			{
+				request = "http://openlibrary.org/search.json?isbn=" + Uri.EscapeUriString(search);
+			}
 
 			using (HttpClient client = new HttpClient())
 			{
@@ -230,7 +251,17 @@ namespace ISBNUtility
 		/// <returns></returns>
 		public async Task<Doc> GetInfoFromSearch(string search)
 		{
-			string request = "http://openlibrary.org/search.json?q=" + Uri.EscapeUriString(search);
+			string request = "";
+			var version = GetISBNVersion(search);
+
+			if (version == VERSION.INVALID)
+			{
+				request = "http://openlibrary.org/search.json?title=" + Uri.EscapeUriString(search);
+			}
+			else
+			{
+				request = "http://openlibrary.org/search.json?isbn=" + Uri.EscapeUriString(search);
+			}
 
 			using (HttpClient client = new HttpClient())
 			{
