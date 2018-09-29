@@ -52,5 +52,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TableParser\TableParser.csproj">
+      <Project>{2ec4609f-55a6-4fb4-9d3a-92dea20b54c7}</Project>
+      <Name>TableParser</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
