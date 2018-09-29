@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ISBNUtility.Model;
 using Newtonsoft.Json;
 
@@ -145,25 +147,38 @@ namespace ISBNUtility
 			return origISBN;
 		}
 
-		private static Task<bool> LoadISBNRanges()
+		private static async Task<bool> LoadISBNRanges()
 		{
-			return Task.Run(() =>
+			// Get the ISBN Ranges
+			if (ranges == null)
 			{
-				// Get the ISBN Ranges
-				if (ranges == null)
+				using (HttpClient client = new HttpClient())
 				{
-					using (var stream = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/ISBNRanges.json"))
+					var response =
+						await client.GetAsync("https://www.isbn-international.org/export_rangemessage.xml");
+
+					if (response.IsSuccessStatusCode)
 					{
-						using (StreamReader sr = new StreamReader(stream))
-						{
-							ranges = JsonConvert.DeserializeObject<ISBNRanges>(sr.ReadToEnd()).ISBNRangeMessage
-								.RegistrationGroups.Group;
-						}
+						var content = await response.Content.ReadAsStreamAsync();
+						XDocument doc = XDocument.Load(content);
+						ranges = JsonConvert.DeserializeObject<ISBNRanges>(JsonConvert.SerializeXNode(doc.Root))
+							.ISBNRangeMessage.RegistrationGroups.Group;
+
+						return true;
 					}
 				}
 
-				return true;
-			});
+				using (var stream = File.OpenRead(AppDomain.CurrentDomain.BaseDirectory + "/ISBNRanges.json"))
+				{
+					using (StreamReader sr = new StreamReader(stream))
+					{
+						ranges = JsonConvert.DeserializeObject<ISBNRanges>(sr.ReadToEnd()).ISBNRangeMessage
+							.RegistrationGroups.Group;
+					}
+				}
+			}
+
+			return true;
 		}
 	}
 }
