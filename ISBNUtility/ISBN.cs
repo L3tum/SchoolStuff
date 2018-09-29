@@ -145,7 +145,7 @@ namespace ISBNUtility
 		/// <returns></returns>
 		public async Task<string[]> GetISBNFromSearch(string search)
 		{
-			string request = "http://openlibrary.org/search.json?title=" + Uri.EscapeUriString(search);
+			string request = "http://openlibrary.org/search.json?q=" + Uri.EscapeUriString(search);
 
 			using (HttpClient client = new HttpClient())
 			{
