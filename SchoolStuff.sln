@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolStuff", "SchoolStuff\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zahlensystemrechner", "Zahlensystemrechner\Zahlensystemrechner.csproj", "{4602F31E-6579-4C62-842C-00CAF22A1CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISBNUtility", "ISBNUtility\ISBNUtility.csproj", "{ECA6550F-77CD-4B1E-9A26-E5C07B04EF99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISBNUtility", "ISBNUtility\ISBNUtility.csproj", "{ECA6550F-77CD-4B1E-9A26-E5C07B04EF99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ISBNRunner", "ISBNRunner\ISBNRunner.csproj", "{28B26D76-FA1B-4D56-AFB5-C4455AF7C0FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISBNRunner", "ISBNRunner\ISBNRunner.csproj", "{28B26D76-FA1B-4D56-AFB5-C4455AF7C0FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableParser", "TableParser\TableParser.csproj", "{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TableParser", "TableParser\TableParser.csproj", "{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

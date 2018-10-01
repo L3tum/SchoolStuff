@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ISBNUtility</name>
+    </assembly>
+    <members>
+        <member name="M:ISBNUtility.Converter.ConvertISBN13ToISBN10(System.String)">
+            <summary>
+            Converts the ISBN13 to ISBN10.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.Converter.ConvertISBN10ToISBN13(System.String)">
+            <summary>
+            Converts the ISBN10 to ISBN13.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetISBNVersion(System.String)">
+            <summary>
+            Gets the isbn version.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.ConvertISBN(System.String)">
+            <summary>
+            Converts the isbn.
+            </summary>
+            <param name="input">The input.</param>
+            <returns></returns>
+            <exception cref="T:System.FormatException">
+            </exception>
+        </member>
+        <member name="M:ISBNUtility.ISBN.HyphenateISBN(System.String)">
+            <summary>
+            Hyphenates the isbn.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetISBNFromSearch(System.String)">
+            <summary>
+            Gets the isbn from search query.
+            </summary>
+            <param name="search">The search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetAuthorFromSearch(System.String)">
+            <summary>
+            Gets the author from search.
+            </summary>
+            <param name="search">The search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetPublisherFromSearch(System.String)">
+            <summary>
+            Gets the publisher from search.
+            </summary>
+            <param name="search">The search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetInfoFromSearch(System.String)">
+            <summary>
+            Gets the information from search.
+            </summary>
+            <param name="search">The search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.Recognizer.hyphenateISBN(System.String)">
+            <summary>
+            Hyphenates the isbn.
+            It uses the ISBN Ranges list provided here https://www.isbn-international.org/range_file_generation
+            and converted to JSON
+            Inspiration is here: https://github.com/xlcnd/isbnlib/blob/dev/isbnlib/_msk.py
+            Permalink: https://github.com/xlcnd/isbnlib/blob/114e4b2c0726a30d3ae50018d27409c004a68800/isbnlib/_msk.py
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.Spec.IsISBN10SpecCompliant(System.String)">
+            <summary>
+            Determines whether [is ISBN10 spec compliant] [the specified isbn].
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns>
+              <c>true</c> if [is ISBN10 spec compliant] [the specified isbn]; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ISBNUtility.Spec.IsISBN13SpecCompliant(System.String)">
+            <summary>
+            Determines whether [is ISBN13 spec compliant] [the specified isbn].
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns>
+              <c>true</c> if [is ISBN13 spec compliant] [the specified isbn]; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ISBNUtility.Spec.CalculateChecksum13(System.String)">
+            <summary>
+            Calculates the checksum for ISBN13.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.Spec.CalculateChecksum10(System.String)">
+            <summary>
+            Calculates the checksum for ISBN10.
+            </summary>
+            <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

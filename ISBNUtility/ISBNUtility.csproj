@@ -9,6 +9,10 @@
     <PackageProjectUrl>https://github.com/L3tum/SchoolStuff/blob/master/ISBNUtility</PackageProjectUrl>
     <RepositoryUrl>https://github.com/L3tum/SchoolStuff/blob/master/ISBNUtility</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
+    <Description>ISBNUtility tries to provide easy-to-use functions for anything ISBN. 
+From converting between ISBN-10 to ISBN-13 (and vice versa) to hyphenating any ISBN and searching an ISBN database for information.</Description>
+    <Copyright>L3tum</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
