@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>L3tum</Authors>
+    <PackageTags>ISBN</PackageTags>
+    <PackageLicenseUrl>https://github.com/L3tum/SchoolStuff/blob/master/ISBNUtility/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/L3tum/SchoolStuff/blob/master/ISBNUtility</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/L3tum/SchoolStuff/blob/master/ISBNUtility</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\Tom\source\repos\SchoolStuff\ISBNUtility\ISBNUtility.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
