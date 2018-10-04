@@ -1,6 +1,7 @@
 ﻿#region usings
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -139,6 +140,18 @@ namespace ISBNUtility
 		}
 
 		/// <summary>
+		/// Gets the country.
+		/// </summary>
+		/// <param name="isbn">The isbn.</param>
+		/// <returns></returns>
+		public string GetCountry(string isbn)
+		{
+			isbn = Recognizer.SanitizeISBN(isbn);
+
+			return Recognizer.GetCountry(isbn);
+		}
+
+		/// <summary>
 		/// Gets the isbn from search query.
 		/// </summary>
 		/// <param name="search">The search.</param>
@@ -273,7 +286,22 @@ namespace ISBNUtility
 						JsonConvert.DeserializeObject<OpenLibrary>(await response.Content.ReadAsStringAsync()
 							.ConfigureAwait(false));
 
-					return data.docs.Count > 0 ? data.docs[0] : new Doc();
+					var doc = data.docs.Count > 0 ? data.docs[0] : new Doc();
+
+					if (doc.isbn != null && doc.isbn.Count > 0)
+					{
+						if (doc.place == null)
+						{
+							doc.place = new List<string>();
+						}
+
+						if (doc.place.Count == 0)
+						{
+							doc.place.Add(GetCountry(doc.isbn[0]));
+						}
+					}
+
+					return doc;
 				}
 			}
 

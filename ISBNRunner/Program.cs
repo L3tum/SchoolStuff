@@ -60,7 +60,7 @@ namespace ISBNRunner
 						var info = Console.ReadLine();
 						Console.WriteLine();
 
-						Console.Write($"Fetching information for \"{info}\"...");
+						Console.Write("Fetching information for \"{0}\"...", info);
 						var sw = Stopwatch.StartNew();
 						var task = isbn.GetInfoFromSearch(info);
 
@@ -102,7 +102,7 @@ namespace ISBNRunner
 						}
 
 						Console.WriteLine();
-						Console.WriteLine($"Das Buch \"{doc.title}\" hat folgende Eigenschaften: ");
+						Console.WriteLine("Das Buch \"{0}\" hat folgende Eigenschaften: ", doc.title);
 						PrintKey("ISBN10: ");
 						if (isbn10 == "None")
 						{
@@ -128,33 +128,33 @@ namespace ISBNRunner
 						if (doc.person != null && doc.person.Count > 0)
 						{
 							PrintKey("Originalauthor: ");
-							Console.WriteLine($"\"{string.Join("; ", doc.person)}\",");
+							Console.WriteLine("\"{0}\",", string.Join("; ", doc.person));
 						}
 
 						PrintKey("Author: ");
-						Console.WriteLine($"\"{string.Join("; ", doc.author_name)}\",");
+						Console.WriteLine("\"{0}\",", string.Join("; ", doc.author_name));
 						if (doc.place != null && doc.place.Count > 0)
 						{
 							PrintKey("Geschrieben in: ");
-							Console.WriteLine($"\"{string.Join("; ", doc.place)}\",");
+							Console.WriteLine("\"{0}\",", string.Join("; ", doc.place));
 						}
 
 						if (doc.contributor != null && doc.contributor.Count > 0)
 						{
 							PrintKey("Mitwirkende: ");
-							Console.WriteLine($"\"{string.Join("; ", doc.contributor)}\",");
+							Console.WriteLine("\"{0}\",", string.Join("; ", doc.contributor));
 						}
 
 						PrintKey("Publisher: ");
-						Console.WriteLine($"\"{string.Join("; ", doc.publisher)}\",");
+						Console.WriteLine("\"{0}\",", string.Join("; ", doc.publisher));
 						if (doc.publish_place != null && doc.publish_place.Count > 0)
 						{
 							PrintKey("Publiziert in: ");
-							Console.WriteLine($"\"{string.Join("; ", doc.publish_place)}\",");
+							Console.WriteLine("\"{0}\",", string.Join("; ", doc.publish_place));
 						}
 
-						Console.WriteLine(
-							$"Zuerst im Jahre {doc.first_publish_year} und zuletzt im Jahre {doc.publish_year.Last()} veröffentlicht.");
+						Console.WriteLine("Zuerst im Jahre {0} und zuletzt im Jahre {1} veröffentlicht.",
+							doc.first_publish_year, doc.publish_year.Last());
 						Console.WriteLine();
 
 						history.Add(new Tuple<string, string, string>(isbn10, isbn13, elapsedSeconds));
@@ -168,7 +168,7 @@ namespace ISBNRunner
 						Console.WriteLine();
 						var version = isbn.GetISBNVersion(info);
 
-						Console.Write($"Fetching author for \"{info}\"...");
+						Console.Write("Fetching author for \"{0}\"...", info);
 						var task = isbn.GetAuthorFromSearch(info);
 
 						if (version != VERSION.INVALID)
@@ -196,19 +196,19 @@ namespace ISBNRunner
 
 						if (version == VERSION.INVALID)
 						{
-							Console.WriteLine($"Der Author des Buchs \"{info}\" ist \"{authors[0]}\".");
+							Console.WriteLine("Der Author des Buchs \"{0}\" ist \"{1}\".", info, authors[0]);
 						}
 						else if (version == VERSION.ISBN13)
 						{
 							Console.Write("Der Author des Buchs \"");
 							PrintISBN13(info);
-							Console.WriteLine($"\" ist \"{authors[0]}\".");
+							Console.WriteLine("\" ist \"{0}\".", authors[0]);
 						}
 						else if (version == VERSION.ISBN10)
 						{
 							Console.Write("Der Author des Buchs \"");
 							PrintISBN10(info);
-							Console.WriteLine($"\" ist \"{authors[0]}\".");
+							Console.WriteLine("\" ist \"{0}\".", authors[0]);
 						}
 
 						Console.WriteLine();
@@ -224,7 +224,7 @@ namespace ISBNRunner
 						Console.WriteLine();
 						var version = isbn.GetISBNVersion(info);
 
-						Console.Write($"Fetching publisher for \"{info}\"...");
+						Console.Write("Fetching publisher for \"{0}\"...", info);
 						var task = isbn.GetPublisherFromSearch(info);
 
 						if (version != VERSION.INVALID)
@@ -252,19 +252,19 @@ namespace ISBNRunner
 
 						if (version == VERSION.INVALID)
 						{
-							Console.WriteLine($"Der Publisher des Buchs \"{info}\" ist \"{publishers[0]}\".");
+							Console.WriteLine("Der Publisher des Buchs \"{0}\" ist \"{1}\".", info, publishers[0]);
 						}
 						else if (version == VERSION.ISBN13)
 						{
 							Console.Write("Der Publisher des Buchs \"");
 							PrintISBN13(info);
-							Console.WriteLine($"\" ist \"{publishers[0]}\".");
+							Console.WriteLine("\" ist \"{0}\".", publishers[0]);
 						}
 						else if (version == VERSION.ISBN10)
 						{
 							Console.Write("Der Publisher des Buchs \"");
 							PrintISBN10(info);
-							Console.WriteLine($"\" ist \"{publishers[0]}\".");
+							Console.WriteLine("\" ist \"{0}\".", publishers[0]);
 						}
 
 						Console.WriteLine();
@@ -302,7 +302,7 @@ namespace ISBNRunner
 
 			if (version == VERSION.INVALID)
 			{
-				Console.WriteLine($"Keine Bücher gefunden, die mit \"{info}\" übereinstimmen!");
+				Console.WriteLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", info);
 			}
 			else if (version == VERSION.ISBN13)
 			{
@@ -331,7 +331,7 @@ namespace ISBNRunner
 
 					if (version == VERSION.INVALID)
 					{
-						Console.Write($"Fetching ISBN for \"{input}\"...");
+						Console.Write("Fetching ISBN for \"{0}\"...", input);
 						var task = isbn.GetISBNFromSearch(input);
 
 						DisplayLoading(task);
@@ -346,8 +346,7 @@ namespace ISBNRunner
 						}
 						else if (isbns.Length == 0)
 						{
-							Console.WriteLine(
-								$"Keine Bücher gefunden, die mit \"{input}\" übereinstimmen!");
+							Console.WriteLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", input);
 							Console.WriteLine();
 
 							return;
@@ -379,7 +378,7 @@ namespace ISBNRunner
 						PrintISBN10(input);
 						Console.Write(" ist in ISBN13 ");
 						PrintISBN13(converted);
-						Console.WriteLine($" und wurde in {elapsedSeconds} Sek. berechnet.");
+						Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
 					}
 					else
 					{
@@ -389,7 +388,7 @@ namespace ISBNRunner
 						PrintISBN13(input);
 						Console.Write(" ist in ISBN10 ");
 						PrintISBN10(converted);
-						Console.WriteLine($" und wurde in {elapsedSeconds} Sek. berechnet.");
+						Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
 					}
 
 					Console.WriteLine();

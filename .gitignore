@@ -1,3 +1,4 @@
-**/obj/**
+*/obj/**
 .vs
-**/bin/**
+*/bin/**
+**/*.runtimeconfig.dev.*

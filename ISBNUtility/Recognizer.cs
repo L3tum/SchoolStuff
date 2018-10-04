@@ -147,6 +147,92 @@ namespace ISBNUtility
 			return origISBN;
 		}
 
+		/// <summary>
+		/// Gets the country this ISBN was registered in
+		/// </summary>
+		/// <param name="isbn"></param>
+		/// <returns></returns>
+		internal static string GetCountry(string isbn)
+		{
+			isbn = SanitizeISBN(isbn);
+			var version = RecognizeISBN(isbn);
+
+			if (version == VERSION.INVALID)
+			{
+				return isbn;
+			}
+
+			var loader = LoadISBNRanges();
+			var origISBN = isbn;
+
+			// We need a ISBN13 for this
+			// Reason is that we need both prefix and checksum so it's easier to just generate it normally
+			if (version == VERSION.ISBN10)
+			{
+				isbn = Converter.ConvertISBN10ToISBN13(isbn);
+			}
+
+			// Prepare ISBN for usage with group finder
+			// Since at least 2 digits need to be used for checksum and title
+			// We need to remove them to properly find the actual range in the group this ISBN is in
+			var preparedISBN = isbn.Substring(0, isbn.Length - 2);
+
+			// ISBN13 Group (Country) string, starting with smallest possible
+			var group = preparedISBN.Substring(0, 3) + "-" + preparedISBN.Substring(3, 1);
+			var current = 3;
+			var country = "";
+
+			loader.Wait();
+
+			for (var i = 0; i < 6; i++)
+			{
+				var found = false;
+
+				foreach (Group range in ranges)
+				{
+					// Check if the current group's (country) Prefix is in the ISBN
+					if (range.Prefix == group)
+					{
+						// The original code this is derived from always takes current + 8 as length
+						// Since the substring starts at index 4 at minimum a length of minimum 12 would end up way over string
+						// So we just cut the whole string starting at current + 1
+						var sevens = int.Parse(preparedISBN.Substring(current + 1).PadRight(7, '0'));
+
+						// Check if the part without the group is in the rules of the group
+						foreach (var rule in (Newtonsoft.Json.Linq.JArray)range.Rules.Rule)
+						{
+							var r = rule.ToObject<Rule>();
+							var ra = r.Range.Split('-');
+
+							if (int.Parse(ra[0]) <= sevens && sevens <= int.Parse(ra[1]))
+							{
+								country = range.Agency;
+								found = true;
+								break;
+							}
+						}
+
+						if (found)
+						{
+							break;
+						}
+					}
+				}
+
+				// Unfortunately we can't use LINQ here all that good so...
+				if (found)
+				{
+					break;
+				}
+
+				// Else take more from the ISBN to identify the group
+				current++;
+				group += preparedISBN.Substring(current, 1);
+			}
+
+			return country;
+		}
+
 		private static async Task<bool> LoadISBNRanges()
 		{
 			// Get the ISBN Ranges

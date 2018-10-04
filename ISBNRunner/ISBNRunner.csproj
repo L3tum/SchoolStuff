@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ISBNUtility\ISBNUtility.csproj" />
     <ProjectReference Include="..\TableParser\TableParser.csproj" />
   </ItemGroup>
