@@ -30,7 +30,7 @@ namespace ISBNRunner
 					case "help":
 					{
 						Console.WriteLine(
-							"Verfügbare Commands: help, history, clearHistory, clear, author, publisher, info.");
+							"Verfügbare Commands: help, history, clearHistory, clear, author, publisher, land, verlag, info.");
 						Console.WriteLine(
 							"Oder eine ISBN in ISBN10 oder ISBN13 Format, welche in das jeweilig andere konvertiert werden soll.");
 						Console.WriteLine("Oder einen Titel, für den die ISBN gefunden werden soll.");
@@ -102,7 +102,7 @@ namespace ISBNRunner
 						}
 
 						Console.WriteLine();
-						Console.WriteLine("Das Buch \"{0}\" hat folgende Eigenschaften: ", doc.title);
+						WrapLine("Das Buch \"{0}\" hat folgende Eigenschaften: ", doc.title);
 						PrintKey("ISBN10: ");
 						if (isbn10 == "None")
 						{
@@ -128,33 +128,38 @@ namespace ISBNRunner
 						if (doc.person != null && doc.person.Count > 0)
 						{
 							PrintKey("Originalauthor: ");
-							Console.WriteLine("\"{0}\",", string.Join("; ", doc.person));
+							WrapLine("\"{0}\",", string.Join("; ", doc.person));
 						}
 
 						PrintKey("Author: ");
-						Console.WriteLine("\"{0}\",", string.Join("; ", doc.author_name));
+						WrapLine("\"{0}\",", string.Join("; ", doc.author_name));
+
 						if (doc.place != null && doc.place.Count > 0)
 						{
 							PrintKey("Geschrieben in: ");
-							Console.WriteLine("\"{0}\",", string.Join("; ", doc.place));
+							WrapLine("\"{0}\",", string.Join("; ", doc.place));
 						}
 
 						if (doc.contributor != null && doc.contributor.Count > 0)
 						{
 							PrintKey("Mitwirkende: ");
-							Console.WriteLine("\"{0}\",", string.Join("; ", doc.contributor));
+							WrapLine("\"{0}\",", string.Join("; ", doc.contributor));
 						}
 
 						PrintKey("Publisher: ");
-						Console.WriteLine("\"{0}\",", string.Join("; ", doc.publisher));
+						WrapLine("\"{0}\",", string.Join("; ", doc.publisher));
+
 						if (doc.publish_place != null && doc.publish_place.Count > 0)
 						{
 							PrintKey("Publiziert in: ");
-							Console.WriteLine("\"{0}\",", string.Join("; ", doc.publish_place));
+							WrapLine("\"{0}\",", string.Join("; ", doc.publish_place));
 						}
 
-						Console.WriteLine("Zuerst im Jahre {0} und zuletzt im Jahre {1} veröffentlicht.",
+						var oldColor = Console.ForegroundColor;
+						Console.ForegroundColor = ConsoleColor.Cyan;
+						WrapLine("Zuerst im Jahre {0} und zuletzt im Jahre {1} veröffentlicht.",
 							doc.first_publish_year, doc.publish_year.Last());
+						Console.ForegroundColor = oldColor;
 						Console.WriteLine();
 
 						history.Add(new Tuple<string, string, string>(isbn10, isbn13, elapsedSeconds));
@@ -182,7 +187,7 @@ namespace ISBNRunner
 
 						if (authors.Length > 1)
 						{
-							Console.WriteLine(
+							WrapLine(
 								"Mehrere zutreffende Bücher gefunden! Versuche, präzisere Suchen zu machen.");
 							Console.WriteLine();
 						}
@@ -196,19 +201,19 @@ namespace ISBNRunner
 
 						if (version == VERSION.INVALID)
 						{
-							Console.WriteLine("Der Author des Buchs \"{0}\" ist \"{1}\".", info, authors[0]);
+							WrapLine("Der Author des Buchs \"{0}\" ist \"{1}\".", info, authors[0]);
 						}
 						else if (version == VERSION.ISBN13)
 						{
 							Console.Write("Der Author des Buchs \"");
 							PrintISBN13(info);
-							Console.WriteLine("\" ist \"{0}\".", authors[0]);
+							WrapLine("\" ist \"{0}\".", authors[0]);
 						}
 						else if (version == VERSION.ISBN10)
 						{
 							Console.Write("Der Author des Buchs \"");
 							PrintISBN10(info);
-							Console.WriteLine("\" ist \"{0}\".", authors[0]);
+							WrapLine("\" ist \"{0}\".", authors[0]);
 						}
 
 						Console.WriteLine();
@@ -238,7 +243,7 @@ namespace ISBNRunner
 
 						if (publishers.Length > 1)
 						{
-							Console.WriteLine(
+							WrapLine(
 								"Mehrere zutreffende Bücher gefunden! Versuche, präzisere Suchen zu machen.");
 							Console.WriteLine();
 						}
@@ -252,24 +257,87 @@ namespace ISBNRunner
 
 						if (version == VERSION.INVALID)
 						{
-							Console.WriteLine("Der Publisher des Buchs \"{0}\" ist \"{1}\".", info, publishers[0]);
+							WrapLine("Der Publisher des Buchs \"{0}\" ist \"{1}\".", info, publishers[0]);
 						}
 						else if (version == VERSION.ISBN13)
 						{
 							Console.Write("Der Publisher des Buchs \"");
 							PrintISBN13(info);
-							Console.WriteLine("\" ist \"{0}\".", publishers[0]);
+							WrapLine("\" ist \"{0}\".", publishers[0]);
 						}
 						else if (version == VERSION.ISBN10)
 						{
 							Console.Write("Der Publisher des Buchs \"");
 							PrintISBN10(info);
-							Console.WriteLine("\" ist \"{0}\".", publishers[0]);
+							WrapLine("\" ist \"{0}\".", publishers[0]);
 						}
 
 						Console.WriteLine();
 
 						WorkWithISBN(info);
+
+						break;
+					}
+
+					case "land":
+					{
+						Console.Write("Bitte geben Sie die Gruppenkennung ein: ");
+						var info = Console.ReadLine();
+						Console.WriteLine();
+
+						var task = isbn.GetCountryFromNumber(info);
+
+						Console.Write("Fetching country for \"{0}\"...", info);
+						DisplayLoading(task);
+
+						var country = task.Result;
+
+						if (string.IsNullOrEmpty(country))
+						{
+							WrapLine("Konnte kein Land für {0} finden!", info);
+							Console.WriteLine();
+
+							break;
+						}
+
+						WrapLine("Das Land mit der Nummer {0} ist {1}", info, country);
+						Console.WriteLine();
+
+						break;
+					}
+
+					case "verlag":
+					{
+						Console.Write("Bitte geben Sie die Verlagskennung ein: ");
+						var info = Console.ReadLine();
+						Console.WriteLine();
+
+						var task = isbn.GetPublisherFromNumber(info);
+
+						Console.Write("Fetching publisher for \"{0}\"...", info);
+						DisplayLoading(task);
+
+						var publishers = task.Result;
+
+						if (publishers.Length == 0)
+						{
+							WrapLine("Konnte keinen Verlag für {0} finden!", info);
+							Console.WriteLine();
+
+							break;
+						}
+
+						if (publishers.Length > 1)
+						{
+							WrapLine("Es wurden mehrere Verläge gefunden! Versuche, präziser zu sein.");
+							Console.WriteLine();
+						}
+
+						WrapLine(string.Format(
+							"Der Verlag mit der Nummer \"{0}\" heißt \"{1}\", wurde bei der Agentur von \"{2}\" registriert und arbeitet in \"{3}\".",
+							info, publishers.First().RegistrantName.Replace("\"", ""), publishers.First().AgencyName,
+							publishers.First().Country));
+						Console.WriteLine();
 
 						break;
 					}
@@ -288,6 +356,39 @@ namespace ISBNRunner
 			}
 		}
 
+		private static void WrapLine(string line, params object[] arg)
+		{
+			if (arg.Length == 0)
+			{
+				WriteLines(GetWordWrappedForConsole(line));
+			}
+			else
+			{
+				WriteLines(GetWordWrappedForConsole(string.Format(line, arg)));
+			}
+		}
+
+		private static IEnumerable<string> GetWordWrappedForConsole(string text)
+		{
+			var words = text.Split(' ');
+			return words.Skip(1).Aggregate(words.Take(1).ToList(), (l, w) =>
+			{
+				if (l.Last().Length + w.Length >= (Console.WindowWidth - Console.CursorLeft))
+					l.Add(w);
+				else
+					l[l.Count - 1] += " " + w;
+				return l;
+			});
+		}
+
+		private static void WriteLines(IEnumerable<string> lines)
+		{
+			foreach (string line in lines)
+			{
+				Console.WriteLine(line);
+			}
+		}
+
 		private static void PrintKey(string key)
 		{
 			var normalColor = Console.ForegroundColor;
@@ -302,19 +403,19 @@ namespace ISBNRunner
 
 			if (version == VERSION.INVALID)
 			{
-				Console.WriteLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", info);
+				WrapLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", info);
 			}
 			else if (version == VERSION.ISBN13)
 			{
 				Console.Write("Keine Bücher gefunden, die mit \"");
 				PrintISBN13(info);
-				Console.WriteLine("\" übereinstimmen!");
+				WrapLine("\" übereinstimmen!");
 			}
 			else if (version == VERSION.ISBN10)
 			{
 				Console.Write("Keine Bücher gefunden, die mit \"");
 				PrintISBN10(info);
-				Console.WriteLine("\" übereinstimmen!");
+				WrapLine("\" übereinstimmen!");
 			}
 		}
 
@@ -340,13 +441,13 @@ namespace ISBNRunner
 
 						if (isbns.Length > 1)
 						{
-							Console.WriteLine(
+							WrapLine(
 								"Mehrere zutreffende Bücher gefunden! Versuche, präzisere Suchen zu machen.");
 							Console.WriteLine();
 						}
 						else if (isbns.Length == 0)
 						{
-							Console.WriteLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", input);
+							WrapLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", input);
 							Console.WriteLine();
 
 							return;

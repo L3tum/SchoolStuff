@@ -140,15 +140,79 @@ namespace ISBNUtility
 		}
 
 		/// <summary>
+		/// Gets the country with the country identifier
+		/// </summary>
+		/// <param name="number"></param>
+		/// <returns></returns>
+		public async Task<string> GetCountryFromNumber(string number)
+		{
+			return await Task.Run(() =>
+			{
+				// We need the prefix for this search
+				// as the data is with a prefix
+				if (!number.StartsWith(Spec.PREFIX))
+				{
+					number = Spec.PREFIX + "-" + number;
+				}
+
+				return Recognizer.GetCountryFromNumber(number);
+			});
+		}
+
+		/// <summary>
 		/// Gets the country.
 		/// </summary>
 		/// <param name="isbn">The isbn.</param>
 		/// <returns></returns>
-		public string GetCountry(string isbn)
+		public async Task<string> GetCountry(string isbn)
 		{
-			isbn = Recognizer.SanitizeISBN(isbn);
+			return await Task.Run(() =>
+			{
+				isbn = Recognizer.SanitizeISBN(isbn);
 
-			return Recognizer.GetCountry(isbn);
+				return Recognizer.GetCountry(isbn);
+			});
+		}
+
+		/// <summary>
+		/// Gets the publisher name from its number
+		/// </summary>
+		/// <param name="number"></param>
+		/// <returns></returns>
+		public async Task<PublisherDoc[]> GetPublisherFromNumber(string number)
+		{
+			// We need the prefix again
+			if (!number.StartsWith(Spec.PREFIX))
+			{
+				number = Spec.PREFIX + "-" + number;
+			}
+
+			string request = string.Format(
+				"https://grp.isbn-international.org/sites/all/modules/piid_cineca_solr/piid_cineca_solr.ajax.php?q={0}&wt=json",
+				number);
+
+			using (HttpClient client = new HttpClient())
+			{
+				var response = await client.GetAsync(request);
+
+				if (response.IsSuccessStatusCode)
+				{
+					PublisherRegister register =
+						JsonConvert.DeserializeObject<PublisherRegister>(await response.Content.ReadAsStringAsync()
+							.ConfigureAwait(false));
+
+					var publishers = new List<PublisherDoc>();
+
+					foreach (PublisherDoc publisherDoc in register.response.docs)
+					{
+						publishers.Add(publisherDoc);
+					}
+
+					return publishers.ToArray();
+				}
+			}
+
+			return Array.Empty<PublisherDoc>();
 		}
 
 		/// <summary>
@@ -297,7 +361,7 @@ namespace ISBNUtility
 
 						if (doc.place.Count == 0)
 						{
-							doc.place.Add(GetCountry(doc.isbn[0]));
+							doc.place.Add(await GetCountry(doc.isbn[0]).ConfigureAwait(false));
 						}
 					}
 

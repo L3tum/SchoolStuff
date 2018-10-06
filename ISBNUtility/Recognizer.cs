@@ -148,6 +148,34 @@ namespace ISBNUtility
 		}
 
 		/// <summary>
+		/// Gets the country from number.
+		/// </summary>
+		/// <param name="number">The number.</param>
+		/// <returns></returns>
+		internal static string GetCountryFromNumber(string number)
+		{
+			var loader = LoadISBNRanges();
+			var country = "";
+
+			loader.Wait();
+
+			// Since we expect the "fully qualifying" identifier for this country/group
+			// we can just iterate over all the groups we got
+			// and don't have to check for any "is the publisher valid for this country" or so
+			foreach (Group range in ranges)
+			{
+				// Check if the current group's (country) Prefix is the number
+				if (range.Prefix == number)
+				{
+					country = range.Agency;
+					break;
+				}
+			}
+
+			return country;
+		}
+
+		/// <summary>
 		/// Gets the country this ISBN was registered in
 		/// </summary>
 		/// <param name="isbn"></param>
@@ -163,7 +191,6 @@ namespace ISBNUtility
 			}
 
 			var loader = LoadISBNRanges();
-			var origISBN = isbn;
 
 			// We need a ISBN13 for this
 			// Reason is that we need both prefix and checksum so it's easier to just generate it normally
@@ -199,7 +226,7 @@ namespace ISBNUtility
 						var sevens = int.Parse(preparedISBN.Substring(current + 1).PadRight(7, '0'));
 
 						// Check if the part without the group is in the rules of the group
-						foreach (var rule in (Newtonsoft.Json.Linq.JArray)range.Rules.Rule)
+						foreach (var rule in (Newtonsoft.Json.Linq.JArray) range.Rules.Rule)
 						{
 							var r = rule.ToObject<Rule>();
 							var ra = r.Range.Split('-');

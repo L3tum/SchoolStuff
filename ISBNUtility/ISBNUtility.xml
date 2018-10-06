@@ -41,11 +41,25 @@
             <param name="isbn">The isbn.</param>
             <returns></returns>
         </member>
+        <member name="M:ISBNUtility.ISBN.GetCountryFromNumber(System.String)">
+            <summary>
+            Gets the country with the country identifier
+            </summary>
+            <param name="number"></param>
+            <returns></returns>
+        </member>
         <member name="M:ISBNUtility.ISBN.GetCountry(System.String)">
             <summary>
             Gets the country.
             </summary>
             <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.ISBN.GetPublisherFromNumber(System.String)">
+            <summary>
+            Gets the publisher name from its number
+            </summary>
+            <param name="number"></param>
             <returns></returns>
         </member>
         <member name="M:ISBNUtility.ISBN.GetISBNFromSearch(System.String)">
@@ -85,6 +99,13 @@
             Permalink: https://github.com/xlcnd/isbnlib/blob/114e4b2c0726a30d3ae50018d27409c004a68800/isbnlib/_msk.py
             </summary>
             <param name="isbn">The isbn.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ISBNUtility.Recognizer.GetCountryFromNumber(System.String)">
+            <summary>
+            Gets the country from number.
+            </summary>
+            <param name="number">The number.</param>
             <returns></returns>
         </member>
         <member name="M:ISBNUtility.Recognizer.GetCountry(System.String)">
