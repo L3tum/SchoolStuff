@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,6 +22,10 @@ namespace ISBNUtility
 
 	public class ISBN
 	{
+		public delegate void FormatWarning(string ISBN, string message);
+
+		public event FormatWarning OnMalformedISBN;
+
 		/// <summary>
 		/// Gets the isbn version.
 		/// </summary>
@@ -64,15 +69,14 @@ namespace ISBNUtility
 				throw new FormatException($"{input} is not spec compliant!");
 			}
 
-			// Throw if checksum calculated is not the one in the ISBN (malformed/incorrect ISBN)
+			// Warn if checksum calculated is not the one in the ISBN (malformed/incorrect ISBN)
 			var checksum = (version == VERSION.ISBN10
 				? Spec.CalculateChecksum10(sanitized)
 				: Spec.CalculateChecksum13(sanitized));
 
 			if (checksum != sanitized[sanitized.Length - 1])
 			{
-				throw new FormatException(
-					$"Checksum mismatch for {input}! It should be {checksum.ToString().ToUpper()}!");
+				OnMalformedISBN?.Invoke(input, $"Checksum mismatch for {input}! It should be {checksum.ToString().ToUpper()}!");
 			}
 
 			var isbn = (version == VERSION.ISBN10

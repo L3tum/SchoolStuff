@@ -30,7 +30,7 @@ namespace ISBNRunner
 					case "help":
 					{
 						Console.WriteLine(
-							"Verfügbare Commands: help, history, clearHistory, clear, author, publisher, land, verlag, info.");
+							"Verfügbare Commands: help, history, clearHistory, clear, author, publisher, land, verlag, info, erstelleISBN.");
 						Console.WriteLine(
 							"Oder eine ISBN in ISBN10 oder ISBN13 Format, welche in das jeweilig andere konvertiert werden soll.");
 						Console.WriteLine("Oder einen Titel, für den die ISBN gefunden werden soll.");
@@ -342,6 +342,37 @@ namespace ISBNRunner
 						break;
 					}
 
+					case "erstelleisbn":
+					{
+						Console.Write("Bitte geben Sie die Länderkennung ein: ");
+						var country = Console.ReadLine();
+						Console.WriteLine();
+						Console.Write("Bitte geben Sie die Verlagskennung ein: ");
+						var publisher = Console.ReadLine();
+						Console.WriteLine();
+						Console.Write("Bitte geben Sie die Titelkennung ein: ");
+						var title = Console.ReadLine();
+						Console.WriteLine();
+
+						// Construct ISBN with placeholder checksum
+						var constructed = country + "-" + publisher + "-" + title + "-" + 0;
+
+						try
+						{
+							// "Convert" ISBN to get an actual proved-to-be-working ISBN
+							constructed = isbn.ConvertISBN(constructed);
+						}
+						catch (FormatException e)
+						{
+							Console.WriteLine(e.Message);
+							Console.WriteLine();
+						}
+
+						WorkWithISBN(constructed);
+
+						break;
+					}
+
 					default:
 					{
 						WorkWithISBN(input);
@@ -421,6 +452,7 @@ namespace ISBNRunner
 
 		private static void WorkWithISBN(string input)
 		{
+			isbn.OnMalformedISBN += IsbnOnOnMalformedIsbn;
 			if (!string.IsNullOrWhiteSpace(input))
 			{
 				try
@@ -432,31 +464,38 @@ namespace ISBNRunner
 
 					if (version == VERSION.INVALID)
 					{
-						Console.Write("Fetching ISBN for \"{0}\"...", input);
-						var task = isbn.GetISBNFromSearch(input);
+						Console.Write(
+							"ISBN Version wurde nicht erkannt! Wollen Sie nach der ISBN für einen Buchtitel suchen? [J/n]");
+						var i = Console.ReadLine();
 
-						DisplayLoading(task);
-
-						var isbns = task.Result;
-
-						if (isbns.Length > 1)
+						if (string.IsNullOrEmpty(i) || i.ToLower() == "j")
 						{
-							WrapLine(
-								"Mehrere zutreffende Bücher gefunden! Versuche, präzisere Suchen zu machen.");
-							Console.WriteLine();
+							Console.Write("Fetching ISBN for \"{0}\"...", input);
+							var task = isbn.GetISBNFromSearch(input);
+
+							DisplayLoading(task);
+
+							var isbns = task.Result;
+
+							if (isbns.Length > 1)
+							{
+								WrapLine(
+									"Mehrere zutreffende Bücher gefunden! Versuche, präzisere Suchen zu machen.");
+								Console.WriteLine();
+							}
+							else if (isbns.Length == 0)
+							{
+								WrapLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", input);
+								Console.WriteLine();
+
+								return;
+							}
+
+							input = isbns[0];
+
+							version = isbn.GetISBNVersion(input);
+							converted = isbn.ConvertISBN(input).ToUpper();
 						}
-						else if (isbns.Length == 0)
-						{
-							WrapLine("Keine Bücher gefunden, die mit \"{0}\" übereinstimmen!", input);
-							Console.WriteLine();
-
-							return;
-						}
-
-						input = isbns[0];
-
-						version = isbn.GetISBNVersion(input);
-						converted = isbn.ConvertISBN(input).ToUpper();
 					}
 					else
 					{
@@ -468,28 +507,30 @@ namespace ISBNRunner
 						(sw.ElapsedTicks / (TimeSpan.TicksPerMillisecond / 1000f) / 1000f / 1000f)
 						.ToString("F99").TrimEnd('0');
 
-
-					input = isbn.HyphenateISBN(input);
-
-					if (version == VERSION.ISBN10)
+					if (converted != "")
 					{
-						history.Insert(0,
-							new Tuple<string, string, string>(input, converted, elapsedSeconds));
-						Console.Write("Die ISBN10 ");
-						PrintISBN10(input);
-						Console.Write(" ist in ISBN13 ");
-						PrintISBN13(converted);
-						Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
-					}
-					else
-					{
-						history.Insert(0,
-							new Tuple<string, string, string>(converted, input, elapsedSeconds));
-						Console.Write("Die ISBN13 ");
-						PrintISBN13(input);
-						Console.Write(" ist in ISBN10 ");
-						PrintISBN10(converted);
-						Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
+						input = isbn.HyphenateISBN(input);
+
+						if (version == VERSION.ISBN10)
+						{
+							history.Insert(0,
+								new Tuple<string, string, string>(input, converted, elapsedSeconds));
+							Console.Write("Die ISBN10 ");
+							PrintISBN10(input);
+							Console.Write(" ist in ISBN13 ");
+							PrintISBN13(converted);
+							Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
+						}
+						else
+						{
+							history.Insert(0,
+								new Tuple<string, string, string>(converted, input, elapsedSeconds));
+							Console.Write("Die ISBN13 ");
+							PrintISBN13(input);
+							Console.Write(" ist in ISBN10 ");
+							PrintISBN10(converted);
+							Console.WriteLine(" und wurde in {0} Sek. berechnet.", elapsedSeconds);
+						}
 					}
 
 					Console.WriteLine();
@@ -500,6 +541,14 @@ namespace ISBNRunner
 					Console.WriteLine();
 				}
 			}
+
+			isbn.OnMalformedISBN -= IsbnOnOnMalformedIsbn;
+		}
+
+		private static void IsbnOnOnMalformedIsbn(string s, string message)
+		{
+			Console.WriteLine(message);
+			Console.WriteLine();
 		}
 
 		private static void PrintISBN13(string isbn)
