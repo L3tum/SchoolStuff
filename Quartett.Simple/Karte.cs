@@ -6,7 +6,7 @@ using System.Linq;
 
 #endregion
 
-namespace Quartett
+namespace Quartett.Simple
 {
 	public class Karte : DynamicObject
 	{
