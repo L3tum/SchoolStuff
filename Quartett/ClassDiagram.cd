@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Quartett.Spieler">
+    <Position X="6" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAgAAAAAAAgAAAAAAAAAAAAABAAAAAgAA=</HashCode>
+      <FileName>Spieler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Stapel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Quartett.Mensch">
+    <Position X="7.75" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Mensch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.KI">
+    <Position X="5.25" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>KI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.Karte">
+    <Position X="2.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAACAAAAAAAAAAAAAAAAIAECAAAADAAAAAAAAAAAAA=</HashCode>
+      <FileName>Karte.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.Kartenset">
+    <Position X="15.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAQAAAgAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Kartenset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.Utility">
+    <Position X="13" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.Stapel">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAEAQAAAAACA=</HashCode>
+      <FileName>Stapel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.Program">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quartett.GameMaster">
+    <Position X="12.75" Y="1" Width="1.75" />
+    <AssociationLine Name="kartenset" Type="Quartett.Kartenset" FixedFromPoint="true">
+      <Path>
+        <Point X="14.5" Y="3.548" />
+        <Point X="15.75" Y="3.548" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAgQAAAAAAAAJAAAQABAYAAAAEABACCABCAAAAEAAEI=</HashCode>
+      <FileName>GameMaster.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="kartenset" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Quartett.SchwereKI">
+    <Position X="3.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SchwereKI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

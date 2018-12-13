@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISBNRunner", "ISBNRunner\IS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TableParser", "TableParser\TableParser.csproj", "{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quartett", "Quartett\Quartett.csproj", "{4763B5A1-7334-44ED-9F75-D99357B3CDED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EC4609F-55A6-4FB4-9D3A-92DEA20B54C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4763B5A1-7334-44ED-9F75-D99357B3CDED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4763B5A1-7334-44ED-9F75-D99357B3CDED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4763B5A1-7334-44ED-9F75-D99357B3CDED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4763B5A1-7334-44ED-9F75-D99357B3CDED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

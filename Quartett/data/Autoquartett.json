@@ -1,0 +1,375 @@
+{
+  "reversals": [
+    "zero_to_hundred"
+  ],
+  "cards": [
+    {
+      "card_id": "A1",
+      "identifier": "Ford Capri 1600 GT",
+      "kmh": "166",
+      "hp": "85",
+      "ccm": "1600",
+      "zero_to_hundred": "13.6"
+    },
+    {
+      "card_id": "A2",
+      "identifier": "Ford GT 2.0",
+      "kmh": "230",
+      "hp": "120",
+      "ccm": "2000",
+      "zero_to_hundred": "10.4"
+    },
+    {
+      "card_id": "A3",
+      "identifier": "Ford Fiesta 1.2",
+      "kmh": "190",
+      "hp": "100",
+      "ccm": "1200",
+      "zero_to_hundred": "15.2"
+    },
+    {
+      "card_id": "A4",
+      "identifier": "Ford Focus",
+      "kmh": "215",
+      "hp": "125",
+      "ccm": "1150",
+      "zero_to_hundred": "12.3"
+    },
+    {
+      "card_id": "B1",
+      "identifier": "VW Scirocco 2000 GT",
+      "kmh": "250",
+      "hp": "160",
+      "ccm": "2000",
+      "zero_to_hundred": "11.1"
+    },
+    {
+      "card_id": "B2",
+      "identifier": "VW Käfer",
+      "kmh": "190",
+      "hp": "100",
+      "ccm": "1200",
+      "zero_to_hundred": "14.6"
+    },
+    {
+      "card_id": "B3",
+      "identifier": "VW Golf GT",
+      "kmh": "260",
+      "hp": "170",
+      "ccm": "2200",
+      "zero_to_hundred": "9.6"
+    },
+    {
+      "card_id": "B4",
+      "identifier": "VW Polo",
+      "kmh": "185",
+      "hp": "95",
+      "ccm": "1350",
+      "zero_to_hundred": "13.0"
+    },
+    {
+      "card_id": "C1",
+      "identifier": "FIAT Punto",
+      "kmh": "183",
+      "hp": "105",
+      "ccm": "1100",
+      "zero_to_hundred": "14.2"
+    },
+    {
+      "card_id": "C2",
+      "identifier": "FIAT 500 1.8",
+      "kmh": "198",
+      "hp": "125",
+      "ccm": "1800",
+      "zero_to_hundred": "12.2"
+    },
+    {
+      "card_id": "C3",
+      "identifier": "FIAT Panda",
+      "kmh": "168",
+      "hp": "90",
+      "ccm": "1100",
+      "zero_to_hundred": "15.1"
+    },
+    {
+      "card_id": "C4",
+      "identifier": "FIAT Bravo",
+      "kmh": "182",
+      "hp": "110",
+      "ccm": "1300",
+      "zero_to_hundred": "11.8"
+    },
+    {
+      "card_id": "D1",
+      "identifier": "SEAT Leon",
+      "kmh": "193",
+      "hp": "130",
+      "ccm": "1200",
+      "zero_to_hundred": "12.6"
+    },
+    {
+      "card_id": "D2",
+      "identifier": "SEAT Marbella",
+      "kmh": "155",
+      "hp": "90",
+      "ccm": "1000",
+      "zero_to_hundred": "16.1"
+    },
+    {
+      "card_id": "D3",
+      "identifier": "SEAT Ibiza 2.0",
+      "kmh": "260",
+      "hp": "165",
+      "ccm": "2000",
+      "zero_to_hundred": "10.6"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    },
+    {
+      "card_id": "D4",
+      "identifier": "SEAT Arona GTI",
+      "kmh": "290",
+      "hp": "190",
+      "ccm": "2200",
+      "zero_to_hundred": "8.9"
+    }
+  ]
+}
